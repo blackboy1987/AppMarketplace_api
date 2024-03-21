@@ -2,7 +2,6 @@ package com.bootx.entity;
 
 import com.bootx.common.BaseAttributeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.*;
