@@ -16,6 +16,7 @@ public class RedisServiceImpl implements RedisService {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
+
     @Override
     public void set(String key, String value) {
         try {

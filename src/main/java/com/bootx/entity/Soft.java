@@ -2,6 +2,7 @@ package com.bootx.entity;
 
 import com.bootx.common.BaseAttributeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -16,27 +17,33 @@ public class Soft extends BaseEntity<Long>{
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Category> categories = new HashSet<>();
 
+    @JsonView({PageView.class,DownloadView.class})
     private String downloadUrl;
     private Integer downloads;
     private String fullName;
 
     @Column(columnDefinition = "longtext")
     private String introduce;
+    @JsonView({PageView.class,DownloadView.class})
     private String logo;
 
     @Column(columnDefinition = "longtext")
     private String memo;
     private String minSdkVersion;
+    @JsonView({PageView.class,DownloadView.class})
     private String name;
     private String packageName;
     private Long reviewCount;
     private Double score;
+    @JsonView({PageView.class,DownloadView.class})
     private String size;
     private Integer status;
     private String targetSdkVersion;
     private String updateDate;
     private String updatedContent;
     private String versionCode;
+
+    @JsonView({DownloadView.class})
     private String versionName;
     private String appName;
 
@@ -217,4 +224,7 @@ public class Soft extends BaseEntity<Long>{
     public static class SoftAttrsConverter extends BaseAttributeConverter<List<Map<String,String>>>{
 
     }
+
+
+    public interface DownloadView extends DefaultView{}
 }

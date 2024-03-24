@@ -5,13 +5,13 @@ import com.bootx.entity.Soft;
 import com.bootx.service.SoftService;
 import com.bootx.util.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.beans.Transient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author black
@@ -44,13 +44,13 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
 
     @Override
     public Map<String, Object> detail(Long id) {
-        String cacheKey = "soft:detail_" + id;
+        String cacheKey = "soft:detail_" + id+"3";
         Map<String,Object> data = new HashMap<>();
         String s = redisService.get(cacheKey);
         try {
             data = JsonUtils.toObject(s, new TypeReference<Map<String, Object>>() {
             });
-        }catch (Exception e){
+        }catch (Exception ignored){
 
         }
         if(!data.isEmpty()){
@@ -59,7 +59,7 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         Soft soft = super.find(id);
         data.put("versionCode",soft.getVersionCode());
         data.put("versionName",soft.getVersionName());
-        data.put("id",id);
+        data.put("id",soft.getId());
         data.put("reviewCount",soft.getReviewCount());
         data.put("fullName",soft.getFullName());
         data.put("score",String.format("%.2f", soft.getScore()));
@@ -75,7 +75,17 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         }else{
             data.put("downloads",soft.getDownloads()+"次下载");
         }
-        redisService.set(cacheKey,JsonUtils.toJson(data));
+        //redisService.set(cacheKey,JsonUtils.toJson(data));
         return data;
+    }
+
+    @Override
+    @Transactional
+    public void updateDownloads(Long id, int i) {
+        Soft soft = find(id);
+        if (soft != null) {
+            soft.setDownloads(soft.getDownloads() + i);
+            update(soft);
+        }
     }
 }
