@@ -74,4 +74,13 @@ public class SoftController {
 		redisService.set("adId:"+soft.getId(),uuid,10, TimeUnit.MINUTES);
 		return Result.success(data);
 	}
+
+	@PostMapping("/url")
+	public Result url(Long id) {
+		Map<String,Object> data = new HashMap<>();
+		Soft soft = softService.find(id);
+		data.put("url",soft.getDownloadUrl());
+		data.put("pwd",soft.getPackageName());
+		return Result.success(data);
+	}
 }
