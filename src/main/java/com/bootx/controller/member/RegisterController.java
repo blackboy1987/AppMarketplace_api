@@ -4,11 +4,14 @@ package com.bootx.controller.member;
 import com.bootx.common.Result;
 import com.bootx.controller.BaseController;
 import com.bootx.entity.Member;
+import com.bootx.service.EmailService;
 import com.bootx.service.MemberRankService;
 import com.bootx.service.MemberService;
+import com.bootx.util.CodeUtils;
 import com.bootx.util.JWTUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +32,25 @@ public class RegisterController extends BaseController {
 
 	@Resource
 	private MemberRankService memberRankService;
+
+	@Resource
+	private EmailService emailService;
+
+
+	@PostMapping
+	public Result sendCode(String email, HttpServletRequest request) {
+		if(StringUtils.isBlank(email)){
+			return Result.error("请输入邮箱");
+		}
+		if (memberService.emailExists(email)) {
+			return Result.error("邮箱已存在");
+		}
+		boolean flag = emailService.send(email, CodeUtils.getCode(6));
+		if(flag){
+			return Result.success("验证码发送成功");
+		}
+		return Result.error("验证码发送失败");
+	}
 
 	/**
 	 * 注册提交
