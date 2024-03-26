@@ -2,6 +2,7 @@
 package com.bootx.service;
 
 import com.bootx.common.Pageable;
+import com.bootx.entity.Category;
 import com.bootx.entity.Soft;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface SoftService extends BaseService<Soft, Long> {
     void updateDownloads(Long id, int i);
 
     List<Map<String, Object>> get(Pageable pageable, String orderBy, Long categoryId);
+
+    void batchSave(Category category, List<Soft> soft);
 }
