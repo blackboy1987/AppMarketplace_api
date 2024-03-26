@@ -1,10 +1,14 @@
 package com.bootx.service.impl;
 
 import com.bootx.common.Pageable;
+import com.bootx.dao.SoftDao;
+import com.bootx.entity.Category;
+import com.bootx.entity.Member;
 import com.bootx.entity.Soft;
 import com.bootx.service.SoftService;
 import com.bootx.util.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,8 @@ import java.util.Map;
 @Service
 public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements SoftService {
 
+    @Resource
+    private SoftDao softDao;
     @Override
     public List<Map<String, Object>> list(Pageable pageable, Long categoryId) {
 
@@ -86,6 +92,22 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         if (soft != null) {
             soft.setDownloads(soft.getDownloads() + i);
             update(soft);
+        }
+    }
+
+
+    @Override
+    public void batchSave(Category category, List<Soft> softs) {
+        for (Soft soft : softs) {
+            Soft current = softDao.find("url", soft.getUrl());
+            if(current==null){
+                Soft.init(soft);
+                soft.getCategories().add(category);
+                super.save(soft);
+            }else{
+                current.getCategories().add(category);
+                super.update(current);
+            }
         }
     }
 }

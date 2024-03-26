@@ -2,6 +2,7 @@
 package com.bootx.service;
 
 import com.bootx.common.Pageable;
+import com.bootx.entity.Category;
 import com.bootx.entity.Soft;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface SoftService extends BaseService<Soft, Long> {
     Map<String,Object> detail(Long id);
 
     void updateDownloads(Long id, int i);
+
+    void batchSave(Category category, List<Soft> soft);
 }

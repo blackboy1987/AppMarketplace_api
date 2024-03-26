@@ -19,7 +19,7 @@ public class Soft extends BaseEntity<Long>{
 
     @JsonView({PageView.class,DownloadView.class})
     private String downloadUrl;
-    private Integer downloads;
+    private Long downloads;
     private String fullName;
 
     @Column(columnDefinition = "longtext")
@@ -47,6 +47,51 @@ public class Soft extends BaseEntity<Long>{
     private String versionName;
     private String appName;
 
+    private String url;
+
+    private String subTitle;
+
+    @OneToMany(mappedBy = "soft",fetch = FetchType.LAZY)
+    private Set<SoftImage> softImages = new HashSet<>();
+    public Set<SoftImage> getSoftImages() {
+        return softImages;
+    }
+
+    public void setSoftImages(Set<SoftImage> softImages) {
+        this.softImages = softImages;
+    }
+
+    /**
+     * 0: 无广告
+     * 1：少量广告
+     * 2：超过广告
+     */
+    private Integer adType;
+    public Integer getAdType() {
+        return adType;
+    }
+
+    public void setAdType(Integer adType) {
+        this.adType = adType;
+    }
+
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Convert(converter = SoftAttrsConverter.class)
     private List<Map<String,String>> softAttrs = new ArrayList<>();
 
@@ -67,11 +112,11 @@ public class Soft extends BaseEntity<Long>{
         this.downloadUrl = downloadUrl;
     }
 
-    public Integer getDownloads() {
+    public Long getDownloads() {
         return downloads;
     }
 
-    public void setDownloads(Integer downloads) {
+    public void setDownloads(Long downloads) {
         this.downloads = downloads;
     }
 
@@ -227,4 +272,13 @@ public class Soft extends BaseEntity<Long>{
 
 
     public interface DownloadView extends DefaultView{}
+
+
+
+    public static void init(Soft soft){
+        Random random = new Random();
+        soft.setDownloads(random.nextLong(1000));
+        soft.setStatus(0);
+        soft.setScore(new Random().nextDouble(10));
+    }
 }

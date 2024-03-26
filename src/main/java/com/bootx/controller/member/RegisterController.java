@@ -37,7 +37,7 @@ public class RegisterController extends BaseController {
 	private EmailService emailService;
 
 
-	@PostMapping
+	@PostMapping("/sendCode")
 	public Result sendCode(String email, HttpServletRequest request) {
 		if(StringUtils.isBlank(email)){
 			return Result.error("请输入邮箱");
