@@ -6,9 +6,10 @@ import com.bootx.service.SoftService;
 import com.bootx.util.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,5 +88,54 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
             soft.setDownloads(soft.getDownloads() + i);
             update(soft);
         }
+    }
+
+
+    @Override
+    public List<Map<String, Object>> get(Pageable pageable, String orderBy, Long categoryId) {
+        List<Map<String, Object>> maps = new ArrayList<>();
+        String fromSql = "from soft";
+        if (categoryId != null && categoryId != 0) {
+            fromSql = "from soft_categories,soft where softs_id=soft.id and categories_id=" + categoryId;
+        }
+        String pageQuery = "limit " + (pageable.getPageNumber() - 1) * pageable.getPageSize() + "," + pageable.getPageSize();
+        if (StringUtils.equalsIgnoreCase("00", orderBy)) {
+            // 下载排行
+            maps = jdbcTemplate.queryForList("select size, score,versionName, id,logo,name " + fromSql + " order by downloads desc " + pageQuery);
+            maps.forEach(item -> {
+                item.put("score", (item.get("score") + "").substring(0, 3));
+            });
+        } else if (StringUtils.equalsIgnoreCase("01", orderBy)) {
+            // 评分排行
+            maps = jdbcTemplate.queryForList("select id,score,logo,name,versionName,size " + fromSql + " order by score desc " + pageQuery);
+            maps.forEach(item -> {
+                item.put("score", (item.get("score") + "").substring(0, 3));
+            });
+        } else if (StringUtils.equalsIgnoreCase("2", orderBy)) {
+            // 随机
+            maps = jdbcTemplate.queryForList("SELECT size, id,logo,name,score FROM soft WHERE id >= ((SELECT MAX(id) FROM soft)-(SELECT MIN(id) FROM soft)) * RAND() + (SELECT MIN(id) FROM soft) LIMIT 20");
+            maps.forEach(item -> {
+                item.put("score", (item.get("score") + "").substring(0, 3));
+            });
+        } else if (StringUtils.equalsIgnoreCase("3", orderBy)) {
+            // 更新排行
+            maps = jdbcTemplate.queryForList("select size, id,logo,name,score,versionName,updateDate " + fromSql + " order by updateDate desc " + pageQuery);
+            maps.forEach(item -> {
+                item.put("score", (item.get("score") + "").substring(0, 3));
+            });
+        } else if (StringUtils.equalsIgnoreCase("7", orderBy)) {
+            maps = jdbcTemplate.queryForList("select size, id,logo,name,score,versionName " + fromSql + " order by downloads desc " + pageQuery);
+            maps.forEach(item -> {
+                item.put("score", (item.get("score") + "").substring(0, 3));
+            });
+        } else if (StringUtils.equalsIgnoreCase("8", orderBy)) {
+            maps = jdbcTemplate.queryForList("select size, id,logo,name " + fromSql + " order by downloads desc " + pageQuery);
+        } else {
+            maps = jdbcTemplate.queryForList("select size, id ,logo,name,score " + fromSql + " order by downloads desc " + pageQuery);
+            maps.forEach(item -> {
+                item.put("score", (item.get("score") + "").substring(0, 3));
+            });
+        }
+        return maps;
     }
 }

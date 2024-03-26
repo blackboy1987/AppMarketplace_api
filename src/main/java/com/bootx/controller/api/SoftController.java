@@ -4,10 +4,14 @@ package com.bootx.controller.api;
 import com.bootx.audit.Audit;
 import com.bootx.common.Pageable;
 import com.bootx.common.Result;
+import com.bootx.entity.Member;
 import com.bootx.entity.Soft;
+import com.bootx.security.CurrentUser;
 import com.bootx.service.RedisService;
 import com.bootx.service.SoftService;
+import com.bootx.util.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -82,5 +87,38 @@ public class SoftController {
 		data.put("url",soft.getDownloadUrl());
 		data.put("pwd",soft.getPackageName());
 		return Result.success(data);
+	}
+
+	/**
+	 * orderBy
+	 *  0开头：今日
+	 *  	00： 今日下载排行榜
+	 *  	01： 今日好评排行榜
+	 *  1：新鲜
+	 *  2：随心看
+	 *  3：最新发布排行
+	 *  4：最近活跃排行
+	 *  5：最多评价排行
+	 *  6：最多投币排行
+	 *  7：下载量排行
+	 *  8: 热搜应用
+	 * @return
+	 */
+	@PostMapping("/orderBy")
+	@Audit(action = "软件列表")
+	public Result orderBy(Pageable pageable, String orderBy, Long categoryId, @CurrentUser Member member){
+		String cacheKey = orderBy+"_"+categoryId+"_"+pageable.getPageNumber()+"_"+pageable.getPageSize();
+		List<Map<String, Object>> maps;
+		try {
+			maps = JsonUtils.toObject(redisService.get(cacheKey), new TypeReference<List<Map<String, Object>>>() {
+			});
+		}catch (Exception e){
+			maps = softService.get(pageable,orderBy,categoryId);
+			if(!maps.isEmpty()){
+				redisService.set(cacheKey,JsonUtils.toJson(maps));
+			}
+		}
+
+		return Result.success(maps);
 	}
 }

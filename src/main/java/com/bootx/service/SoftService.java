@@ -17,4 +17,6 @@ public interface SoftService extends BaseService<Soft, Long> {
     Map<String,Object> detail(Long id);
 
     void updateDownloads(Long id, int i);
+
+    List<Map<String, Object>> get(Pageable pageable, String orderBy, Long categoryId);
 }
