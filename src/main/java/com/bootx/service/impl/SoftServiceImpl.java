@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,5 +159,14 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
                 super.update(current);
             }
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> search(String keywords, Pageable pageable) {
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select versionName, id,logo,name,size,updateDate,score from soft where name like ? limit ?,?;", "%" + keywords + "%", (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize());
+        maps.forEach(item -> {
+            item.put("memo", "万次下载");
+        });
+        return maps;
     }
 }
