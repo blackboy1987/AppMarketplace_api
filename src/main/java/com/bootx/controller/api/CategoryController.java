@@ -23,4 +23,8 @@ public class CategoryController {
         return Result.success(categoryService.list());
     }
 
+    @PostMapping("/tree")
+    public Result tree(){
+        return Result.success(categoryService.tree());
+    }
 }

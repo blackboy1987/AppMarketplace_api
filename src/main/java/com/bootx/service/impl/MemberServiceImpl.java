@@ -57,7 +57,6 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
             String id = claims.getId();
 			return super.find(Long.valueOf(id));
 		}catch (Exception e){
-			e.printStackTrace();
 			return null;
 		}
 	}

@@ -16,4 +16,6 @@ public interface CategoryService extends BaseService<Category, Long> {
     List<Map<String,Object>> list();
 
     void clearCache(String cacheKey);
+
+    List<Map<String,Object>> tree();
 }

@@ -1,22 +1,29 @@
 package com.bootx.service.impl;
 
 import com.bootx.common.Pageable;
+import com.bootx.dao.CategoryDao;
 import com.bootx.dao.SoftDao;
 import com.bootx.entity.Category;
+import com.bootx.entity.Member;
 import com.bootx.entity.Soft;
+import com.bootx.entity.SoftImage;
+import com.bootx.pojo.SoftPOJO;
+import com.bootx.service.SoftImageService;
 import com.bootx.service.SoftService;
+import com.bootx.util.DateUtils;
+import com.bootx.util.ImageUtils;
 import com.bootx.util.JsonUtils;
+import com.bootx.util.UploadUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 /**
  * @author black
@@ -26,6 +33,12 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
 
     @Resource
     private SoftDao softDao;
+
+    @Resource
+    private SoftImageService softImageService;
+    @Resource
+    private CategoryDao categoryDao;
+
     @Override
     public List<Map<String, Object>> list(Pageable pageable, Long categoryId) {
 
@@ -168,5 +181,72 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
             item.put("memo", "万次下载");
         });
         return maps;
+    }
+
+
+    @Override
+    public void create(SoftPOJO softPOJO, Member member) {
+        Soft soft = new Soft();
+        //soft.setMember(member);
+        soft.setStatus(0);
+        init(soft, softPOJO);
+        initCategory(soft, softPOJO);
+        super.save(soft);
+        initSoftImage(soft, softPOJO);
+
+    }
+
+    private void init(Soft soft, SoftPOJO softPOJO) {
+        soft.setSize(softPOJO.getSize() + "");
+        soft.setScore(9.0);
+        soft.setUpdateDate(DateUtils.formatDateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        soft.setVersionName(softPOJO.getVersionName());
+        soft.setVersionCode(softPOJO.getVersionCode() + "");
+        soft.setDownloads(0L);
+        soft.setFullName(softPOJO.getTitle());
+        soft.setReviewCount(0L);
+        soft.setName(softPOJO.getTitle());
+        soft.setDownloadUrl(softPOJO.getDownloadUrl());
+        //soft.setPassword(softPOJO.getPassword());
+        soft.setMinSdkVersion(softPOJO.getMinSdkVersion());
+        soft.setTargetSdkVersion(softPOJO.getTargetSdkVersion());
+        soft.setPackageName(softPOJO.getPackageName());
+
+
+        String path = "yysc/" + DateUtils.formatDateToString(new Date(), "yyyy/MM/dd/") + UUID.randomUUID().toString().replace("-", "") + ".png";
+        File temp = new File(SystemUtils.getJavaIoTmpDir(), path);
+        if (!temp.getParentFile().exists()) {
+            temp.getParentFile().mkdirs();
+        }
+        ImageUtils.base64ToImage(softPOJO.getAppLogo(), temp);
+        soft.setLogo(UploadUtils.upload(path, temp));
+        System.out.println(soft.getLogo());
+    }
+
+    private void initCategory(Soft soft, SoftPOJO softPOJO) {
+        // 分类
+        Long categoryId0 = softPOJO.getCategoryId0();
+        Long categoryId1 = softPOJO.getCategoryId1();
+        Set<Category> categories = new HashSet<>();
+        categories.add(categoryDao.find(categoryId0));
+        categories.add(categoryDao.find(categoryId1));
+        soft.setCategories(categories);
+    }
+
+    private void initSoftImage(Soft soft, SoftPOJO softPOJO) {
+        softImageService.remove(soft);
+        String urls = softPOJO.getUrls();
+        if(StringUtils.isNotBlank(urls)){
+            String[] split = urls.split(",");
+            for (String s : split) {
+                SoftImage softImage = new SoftImage();
+                softImage.setType(0);
+                softImage.setSoft(soft);
+                softImage.setStatus(0);
+                softImage.setUrl(s);
+                softImage.setSoft(soft);
+                softImageService.save(softImage);
+            }
+        }
     }
 }

@@ -3,7 +3,9 @@ package com.bootx.service;
 
 import com.bootx.common.Pageable;
 import com.bootx.entity.Category;
+import com.bootx.entity.Member;
 import com.bootx.entity.Soft;
+import com.bootx.pojo.SoftPOJO;
 
 import java.util.List;
 import java.util.Map;
@@ -24,4 +26,6 @@ public interface SoftService extends BaseService<Soft, Long> {
     void batchSave(Category category, List<Soft> soft);
 
     List<Map<String, Object>> search(String keywords, Pageable pageable);
+
+    void create(SoftPOJO softPOJO, Member member);
 }

@@ -6,6 +6,7 @@ import com.bootx.service.CategoryService;
 import com.bootx.util.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -65,8 +66,21 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, Long> impleme
         if(cacheKey==null){
             redisService.delete("category:list");
             redisService.delete("category:list1");
+            redisService.delete("category:tree");
         }else{
             redisService.delete(cacheKey);
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> tree() {
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select parent.id,parent.name,(select count(child.id) from category child where parent_id=parent.id) childrenCount from category parent where parent.parent_id is null order by orders asc ;");
+        maps.forEach(item->{
+            if(!StringUtils.equalsIgnoreCase(item.get("childrenCount")+"","0")){
+                item.put("children",jdbcTemplate.queryForList("select id,name from category where parent_id=? order by orders asc ",item.get("id")));
+            }
+            item.remove("childrenCount");
+        });
+        return maps;
     }
 }
