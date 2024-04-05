@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author black
  */
-//@Configuration
+@Configuration
 public class SoftJob {
 
     @Resource
@@ -48,7 +48,7 @@ public class SoftJob {
     public void soft(){
         List<Category> categories = categoryService.findAll();
         for (Category category : categories) {
-            for (int i = 10; i <= 11; i++) {
+            for (int i = 1; i <= 2; i++) {
                 List<Soft> soft = ShouJiUtils.soft(category.getUrl(), i);
                 softService.batchSave(category,soft);
                 if(soft.size()<20){

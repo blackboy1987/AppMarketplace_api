@@ -27,6 +27,7 @@ public class EmailServiceImpl implements EmailService {
             email.send();
             return true;
         }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
     }

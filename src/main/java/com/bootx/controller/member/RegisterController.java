@@ -11,6 +11,8 @@ import com.bootx.util.CodeUtils;
 import com.bootx.util.JWTUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.codec.cli.Digest;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author black
@@ -45,8 +48,11 @@ public class RegisterController extends BaseController {
 		if (memberService.emailExists(email)) {
 			return Result.error("邮箱已存在");
 		}
-		boolean flag = emailService.send(email, CodeUtils.getCode(6));
+
+		String code = CodeUtils.getCode(6);
+		boolean flag = emailService.send(email, code);
 		if(flag){
+			redisService.set("register:"+ DigestUtils.md5Hex(email),code,10,TimeUnit.MINUTES);
 			return Result.success("验证码发送成功");
 		}
 		return Result.error("验证码发送失败");
@@ -56,14 +62,17 @@ public class RegisterController extends BaseController {
 	 * 注册提交
 	 */
 	@PostMapping
-	public Result submit(String username, String password, String email, String spreadMemberUsername, HttpServletRequest request) {
+	public Result submit(String username, String password, String email,String code, String spreadMemberUsername, HttpServletRequest request) {
 		if (memberService.usernameExists(username)) {
 			return Result.error("用户名已存在");
+		}
+		String s = redisService.get("register:" + DigestUtils.md5Hex(email) + ":" + code);
+		if(!StringUtils.equalsIgnoreCase(s,code)){
+			return Result.error("验证码输入错误");
 		}
 		if (memberService.emailExists(email)) {
 			return Result.error("邮箱已存在");
 		}
-
 		Member member = new Member();
 		member.setUsername(username);
 		member.setPassword(password);
