@@ -86,8 +86,24 @@ public class SoftController {
 		Soft soft = softService.find(id);
 		data.put("url",soft.getDownloadUrl());
 		data.put("pwd",soft.getPackageName());
+		if(soft.getDownloadUrl().endsWith(".apk")){
+			data.put("type",0);
+		}else{
+			data.put("type",1);
+		}
 		return Result.success(data);
 	}
+
+	@PostMapping("/checkDownload")
+	public Result checkDownload(Long id) {
+		Map<String,Object> data = new HashMap<>();
+		Soft soft = softService.find(id);
+		if(StringUtils.isNotBlank(soft.getDownloadUrl())){
+			return Result.success();
+		}
+		return Result.error("暂无下载地址");
+	}
+
 
 	/**
 	 * orderBy

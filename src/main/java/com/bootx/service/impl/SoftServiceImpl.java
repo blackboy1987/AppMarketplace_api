@@ -64,7 +64,7 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
 
     @Override
     public Map<String, Object> detail(Long id) {
-        String cacheKey = "soft:detail_" + id+"3";
+        String cacheKey = "soft:detail_" + id;
         Map<String,Object> data = new HashMap<>();
         String s = redisService.get(cacheKey);
         try {
@@ -95,7 +95,7 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         }else{
             data.put("downloads",soft.getDownloads()+"次下载");
         }
-        //redisService.set(cacheKey,JsonUtils.toJson(data));
+        redisService.set(cacheKey,JsonUtils.toJson(data));
         return data;
     }
 
