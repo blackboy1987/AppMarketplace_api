@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailServiceImpl implements EmailService {
 
+    @Override
     public boolean send(String toEmail,String code){
         try {
             Email email = new SimpleEmail();
