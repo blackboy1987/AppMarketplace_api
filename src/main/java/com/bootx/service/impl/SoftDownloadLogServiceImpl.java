@@ -12,6 +12,8 @@ import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -38,6 +40,12 @@ public class SoftDownloadLogServiceImpl extends BaseServiceImpl<SoftDownloadLog,
 			softDownloadLog.setMemberId(member.getId());
 		}
 		softDownloadLog.setIp(IPUtils.getIpAddr(Objects.requireNonNull(WebUtils.getRequest())));
+		Map<String,Object> softInfo = new HashMap<>();
+		softInfo.put("id",soft.getId());
+		softInfo.put("name",soft.getName());
+		softInfo.put("downloadUrl",soft.getDownloadUrl());
+		softInfo.put("logo",soft.getLogo());
+		softDownloadLog.setSoftInfo(softInfo);
 		super.save(softDownloadLog);
 	}
 

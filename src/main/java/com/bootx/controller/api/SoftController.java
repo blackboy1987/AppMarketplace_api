@@ -41,7 +41,6 @@ public class SoftController {
 
 	@Resource
 	private SoftViewLogService softViewLogService;
-	private RedisService redisService;
 
 	@Resource
 	private SoftDownloadLogService softDownloadLogService;
@@ -99,7 +98,7 @@ public class SoftController {
 		Map<String,Object> data = new HashMap<>();
 		Soft soft = softService.find(id);
 		data.put("url",soft.getDownloadUrl());
-		data.put("pwd",soft.getPackageName());
+		//data.put("pwd",soft.getPassword());
 		if(soft.getDownloadUrl().endsWith(".apk")){
 			data.put("type",0);
 		}else{

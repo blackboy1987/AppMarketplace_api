@@ -1,8 +1,15 @@
 package com.bootx.entity;
 
+import com.bootx.common.BaseAttributeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Converter;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 下载记录
@@ -28,7 +35,9 @@ public class SoftDownloadLog extends BaseEntity<Long>{
     /**
      * 软件信息
      */
-    private String softInfo;
+    @Convert(converter = SoftInfoConverter.class)
+    @Column(length = 2000)
+    private Map<String,Object> softInfo = new HashMap<>();
 
     public Long getMemberId() {
         return memberId;
@@ -46,11 +55,11 @@ public class SoftDownloadLog extends BaseEntity<Long>{
         this.softId = softId;
     }
 
-    public String getSoftInfo() {
+    public Map<String, Object> getSoftInfo() {
         return softInfo;
     }
 
-    public void setSoftInfo(String softInfo) {
+    public void setSoftInfo(Map<String, Object> softInfo) {
         this.softInfo = softInfo;
     }
 
@@ -60,5 +69,10 @@ public class SoftDownloadLog extends BaseEntity<Long>{
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    @Converter
+    public static class SoftInfoConverter extends BaseAttributeConverter<Map<String,Object>> {
+
     }
 }
