@@ -1,25 +1,19 @@
 
 package com.bootx.service;
 
-import com.bootx.entity.SoftDownloadLog;
+import com.bootx.entity.Member;
+import com.bootx.entity.Soft;
 import com.bootx.entity.SoftViewLog;
 
 /**
  * @author black
  */
-public interface SoftViewLogService extends BaseService<SoftDownloadLog, Long> {
-
-	/**
-	 * 创建审计日志(异步)
-	 * 
-	 * @param softViewLog
-	 *            审计日志
-	 */
-	void create(SoftViewLog softViewLog);
+public interface SoftViewLogService extends BaseService<SoftViewLog, Long> {
 
 	/**
 	 * 清空审计日志
 	 */
 	void clear();
 
+	void add(Member currentUser, Soft soft);
 }

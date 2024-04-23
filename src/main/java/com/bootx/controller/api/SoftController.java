@@ -8,7 +8,9 @@ import com.bootx.entity.Member;
 import com.bootx.entity.Soft;
 import com.bootx.security.CurrentUser;
 import com.bootx.service.RedisService;
+import com.bootx.service.SoftDownloadLogService;
 import com.bootx.service.SoftService;
+import com.bootx.service.SoftViewLogService;
 import com.bootx.util.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,14 +39,26 @@ public class SoftController {
 	@Resource
 	private RedisService redisService;
 
+	@Resource
+	private SoftViewLogService softViewLogService;
+	private RedisService redisService;
+
+	@Resource
+	private SoftDownloadLogService softDownloadLogService;
+
 	@PostMapping("/list")
 	public Result list(Pageable pageable,Long categoryId) {
 		return Result.success(softService.list(pageable,categoryId));
 	}
 
 	@PostMapping("/detail")
-	public Result detail(Long id) {
-
+	public Result detail(Long id,@CurrentUser Member member) {
+		Soft soft = softService.find(id);
+		if(soft==null){
+			return Result.error("软件不存在");
+		}
+		// 写入浏览日志
+		softViewLogService.add(member,soft);
 		return Result.success(softService.detail(id));
 	}
 
@@ -81,7 +95,7 @@ public class SoftController {
 	}
 
 	@PostMapping("/url")
-	public Result url(Long id) {
+	public Result url(Long id,@CurrentUser Member member) {
 		Map<String,Object> data = new HashMap<>();
 		Soft soft = softService.find(id);
 		data.put("url",soft.getDownloadUrl());
@@ -91,6 +105,8 @@ public class SoftController {
 		}else{
 			data.put("type",1);
 		}
+		// 写入下载日志
+		softDownloadLogService.add(member,soft);
 		return Result.success(data);
 	}
 
