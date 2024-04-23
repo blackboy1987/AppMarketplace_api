@@ -51,6 +51,9 @@ public class Soft extends BaseEntity<Long>{
 
     private String subTitle;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     @OneToMany(mappedBy = "soft",fetch = FetchType.LAZY)
     private Set<SoftImage> softImages = new HashSet<>();
     public Set<SoftImage> getSoftImages() {
@@ -273,7 +276,13 @@ public class Soft extends BaseEntity<Long>{
 
     public interface DownloadView extends DefaultView{}
 
+    public Member getMember() {
+        return member;
+    }
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
     public static void init(Soft soft){
         Random random = new Random();

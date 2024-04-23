@@ -44,7 +44,7 @@ public class SoftJob {
         });
     }
 
-    @Scheduled(fixedDelay = 1000*60*60*24)
+   // @Scheduled(fixedDelay = 1000*60*60*24)
     public void soft(){
         List<Category> categories = categoryService.findAll();
         for (Category category : categories) {
@@ -76,7 +76,7 @@ public class SoftJob {
      *  setFeaturesType
      *  setSoftAttrs
      */
-    @Scheduled(fixedDelay = 1000*5)
+   // @Scheduled(fixedDelay = 1000*5)
     public void softDetail(){
         List<Map<String, Object>> maps = jdbcTemplate.queryForList("select id, url from soft where memo is null limit 10");
         for (Map<String, Object> map : maps) {

@@ -79,8 +79,8 @@ public class SoftController extends BaseController {
     public Result list(Long categoryId, String name, Pageable pageable,Integer status) {
         StringBuilder querySql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();
-        querySql.append("select soft.id,soft.name,soft.createdDate,soft.logo,soft.status,member.username username from soft,soft_categories,member where soft.member_id=member.id and soft_categories.softs_id=soft.id");
-        countSql.append("select count(soft.id) from soft,soft_categories where soft_categories.softs_id=soft.id");
+        querySql.append("select soft.id,soft.name,soft.createdDate,soft.logo,soft.status,member.username username from soft left join member on member.id=soft.member_id,soft_categories where soft_categories.softs_id=soft.id");
+        countSql.append("select count(soft.id) from soft left join member on member.id=soft.member_id,soft_categories where soft_categories.softs_id=soft.id");
         if(StringUtils.isNotBlank(name)){
             querySql.append(" and soft.name like '%").append(name).append("%'");
             countSql.append(" and soft.name like '%").append(name).append("%'");

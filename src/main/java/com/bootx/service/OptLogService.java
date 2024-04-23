@@ -3,6 +3,9 @@ package com.bootx.service;
 
 import com.bootx.entity.OptLog;
 
+/**
+ * @author black
+ */
 public interface OptLogService extends BaseService<OptLog, Long> {
 
 	/**
