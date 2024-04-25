@@ -48,6 +48,7 @@ public class IndexController extends BaseController {
 		}
 		data.put("concernCount",jdbcTemplate.queryForObject("select count(id) from fan where member_id=?",Long.class,member.getId()));
 		data.put("fanCount",jdbcTemplate.queryForObject("select count(id) from fan where fan_id=?",Long.class,member.getId()));
+		data.put("rankName",member.getMemberRank().getName());
 		return Result.success(data);
 	}
 
