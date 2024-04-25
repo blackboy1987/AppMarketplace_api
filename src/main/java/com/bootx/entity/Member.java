@@ -58,12 +58,16 @@ public class Member extends User {
     private String encodedPassword;
 
     /**
-     * 积分
+     * 总积分
      */
     @NotNull
     @Column(nullable = false)
     @JsonView({PageView.class})
     private Long point;
+
+    /**
+     * 当前剩余积分
+     */
     @NotNull
     @Column(nullable = false)
     @JsonView({PageView.class})

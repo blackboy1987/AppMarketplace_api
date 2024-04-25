@@ -4,6 +4,7 @@ package com.bootx.controller.member;
 import com.bootx.common.Result;
 import com.bootx.controller.BaseController;
 import com.bootx.entity.Member;
+import com.bootx.service.MemberPointLogService;
 import com.bootx.service.MemberService;
 import com.bootx.util.IPUtils;
 import com.bootx.util.JWTUtils;
@@ -27,6 +28,8 @@ public class LoginController extends BaseController {
 
 	@Resource
 	private MemberService memberService;
+
+	private MemberPointLogService memberPointLogService;
 
 	@PostMapping
 	public Result index(HttpServletRequest request,String username,String password) {
@@ -56,12 +59,13 @@ public class LoginController extends BaseController {
 		}
 		memberService.update(member);
 		memberService.unLock(member);
-
-
-
 		data.put("username",member.getUsername());
 		data.put("id",member.getId());
 		data.put("token",JWTUtils.create(member.getId()+"",data));
+
+		// 增加积分
+		memberPointLogService.create(member,0,5L,"登录");
+
 		return Result.success(data);
 	}
 }
