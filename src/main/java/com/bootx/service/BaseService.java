@@ -79,6 +79,7 @@ public interface BaseService<T extends BaseEntity<ID>, ID extends Serializable> 
 	 *            分页信息
 	 * @return 实体对象分页
 	 */
+	@Deprecated
 	Page<T> findPage(Pageable pageable);
 
 	/**

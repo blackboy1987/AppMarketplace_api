@@ -96,6 +96,7 @@ public abstract class BaseServiceImpl<T extends BaseEntity<ID>, ID extends Seria
 
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated
 	public Page<T> findPage(Pageable pageable) {
 		return baseDao.findPage(pageable);
 	}

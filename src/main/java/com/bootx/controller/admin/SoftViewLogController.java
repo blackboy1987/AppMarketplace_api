@@ -21,13 +21,14 @@ public class SoftViewLogController extends BaseController {
     @Resource
     private SoftDownloadLogService softDownloadLogService;
 
+
     /**
      * 保存
      */
     @PostMapping("/list")
     @JsonView({BaseEntity.PageView.class})
-    public Result list(Pageable pageable) {
-        return Result.success(softDownloadLogService.findPage(pageable));
+    public Result list(Pageable pageable,Long softId) {
+        return Result.success(softDownloadLogService.findPage(pageable,softId));
     }
 
 }
