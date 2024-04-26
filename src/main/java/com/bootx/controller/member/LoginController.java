@@ -29,6 +29,7 @@ public class LoginController extends BaseController {
 	@Resource
 	private MemberService memberService;
 
+	@Resource
 	private MemberPointLogService memberPointLogService;
 
 	@PostMapping
