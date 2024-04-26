@@ -32,4 +32,18 @@ public class IndexController{
 			return Collections.emptyMap();
 		}
 	}
+
+
+	/**
+	 * 系统的设置信息
+	 * @return
+	 */
+	@PostMapping("/setting")
+	public Map<String,Object> setting(){
+		try {
+			return jdbcTemplate.queryForMap("select name,logo from setting order by id desc limit 1");
+		}catch (Exception e){
+			return Collections.emptyMap();
+		}
+	}
 }
