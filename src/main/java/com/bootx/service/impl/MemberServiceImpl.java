@@ -99,6 +99,18 @@ public class MemberServiceImpl extends BaseServiceImpl<Member, Long> implements 
 		return jdbcTemplate.queryForList(stringBuffer.toString(), "%"+keywords+"%",(pageable.getPageNumber()-1)*pageable.getPageSize(),pageable.getPageSize());
 	}
 
+	@Override
+	public Member getCurrent(String token) {
+		try {
+			Claims claims = JWTUtils.parseToken(token);
+			assert claims != null;
+			String id = claims.getId();
+			return super.find(Long.valueOf(id));
+		}catch (Exception e){
+			return null;
+		}
+	}
+
 
 	@Override
 	public Member update(Member member) {

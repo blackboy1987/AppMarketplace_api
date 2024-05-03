@@ -97,10 +97,13 @@ public class SoftController {
 	public Result url(Long id,@CurrentUser Member member) {
 		Map<String,Object> data = new HashMap<>();
 		Soft soft = softService.find(id);
-		data.put("url",soft.getDownloadUrl());
+		data.put("name",soft.getAppName());
+		//data.put("url",soft.getDownloadUrl());
+		data.put("url","https://m.shouji.com.cn/down/1800088.html");
 		//data.put("pwd",soft.getPassword());
 		if(soft.getDownloadUrl().endsWith(".apk")){
-			data.put("type",0);
+			//data.put("type",0);
+			data.put("type",1);
 		}else{
 			data.put("type",1);
 		}

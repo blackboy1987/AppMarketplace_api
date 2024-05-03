@@ -46,7 +46,7 @@ public class Member extends User {
      * E-mail
      */
     @NotEmpty
-    @Email
+    //@Email
     @Length(max = 200)
     @Column(nullable = false)
     private String email;

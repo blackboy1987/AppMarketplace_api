@@ -192,12 +192,13 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         init(soft, softPOJO);
         initCategory(soft, softPOJO);
         super.save(soft);
-        initSoftImage(soft, softPOJO);
+        //initSoftImage(soft, softPOJO);
 
     }
 
     private void init(Soft soft, SoftPOJO softPOJO) {
         soft.setSize(softPOJO.getSize() + "");
+        soft.setMemo(softPOJO.getUpdatedContent());
         soft.setScore(9.0);
         soft.setUpdateDate(DateUtils.formatDateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
         soft.setVersionName(softPOJO.getVersionName());
@@ -233,7 +234,7 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         soft.setCategories(categories);
     }
 
-    private void initSoftImage(Soft soft, SoftPOJO softPOJO) {
+    /*private void initSoftImage(Soft soft, SoftPOJO softPOJO) {
         softImageService.remove(soft);
         String urls = softPOJO.getUrls();
         if(StringUtils.isNotBlank(urls)){
@@ -248,5 +249,5 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
                 softImageService.save(softImage);
             }
         }
-    }
+    }*/
 }

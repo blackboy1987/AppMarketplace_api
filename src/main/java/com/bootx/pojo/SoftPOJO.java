@@ -11,8 +11,6 @@ import java.io.Serializable;
 public class SoftPOJO implements Serializable {
 
     private String title;
-    private String memo;
-    private String introduce;
     private String updatedContent;
     private String packageName;
     private Integer adType0;
@@ -40,22 +38,6 @@ public class SoftPOJO implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
-    }
-
-    public String getIntroduce() {
-        return introduce;
-    }
-
-    public void setIntroduce(String introduce) {
-        this.introduce = introduce;
     }
 
     public String getUpdatedContent() {

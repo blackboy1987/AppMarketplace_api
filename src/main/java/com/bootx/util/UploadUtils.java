@@ -15,9 +15,9 @@ public class UploadUtils {
 
     private static final String ENDPOINT = "https://oss-cn-hangzhou.aliyuncs.com";
     private static final String BUCKET_NAME = "bootxyysc";
-    private static final String ACCESS_KEY_ID = "LTAI5tGYCpDRGU1s3VZjydcz";
-    private static final String SECRET_ACCESS_KEY = "lgTgxgtkaG4RDgxqwDbzk4W82VPUGG";
-    private static final String URL_PREFIX = "https://bootx-tuchuang.oss-cn-hangzhou.aliyuncs.com/";
+    private static final String ACCESS_KEY_ID = "LTAI5t7HJgDqibT3PHdPuQt6";
+    private static final String SECRET_ACCESS_KEY = "ix0i5cwOPpOKwF7tCZN0YiY8l1B2MK";
+    private static final String URL_PREFIX = "https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/";
 
     public static String upload(String path, File file){
         OSS ossClient = new OSSClientBuilder().build(ENDPOINT, ACCESS_KEY_ID,SECRET_ACCESS_KEY);

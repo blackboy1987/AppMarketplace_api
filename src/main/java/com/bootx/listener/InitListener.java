@@ -2,6 +2,7 @@
 package com.bootx.listener;
 
 import com.bootx.service.CategoryService;
+import com.bootx.service.HomeService;
 import jakarta.annotation.Resource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -19,6 +20,9 @@ public class InitListener {
 	@Resource
 	private CategoryService categoryService;
 
+	@Resource
+	private HomeService homeService;
+
 	/**
 	 * 事件处理
 	 * 
@@ -29,6 +33,7 @@ public class InitListener {
 	public void handle(ContextRefreshedEvent contextRefreshedEvent) {
 		categoryService.clearCache(null);
 		categoryService.list();
+		homeService.load(false);
 		System.out.println("aaaaaaaaaaaaaaaaa");
 	}
 

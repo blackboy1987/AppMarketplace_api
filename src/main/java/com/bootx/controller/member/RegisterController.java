@@ -66,10 +66,11 @@ public class RegisterController extends BaseController {
 		if (memberService.usernameExists(username)) {
 			return Result.error("用户名已存在");
 		}
-		String s = redisService.get("register:" + DigestUtils.md5Hex(email) + ":" + code);
+		/*String s = redisService.get("register:" + DigestUtils.md5Hex(email) + ":" + code);
 		if(!StringUtils.equalsIgnoreCase(s,code)){
 			return Result.error("验证码输入错误");
-		}
+		}*/
+		email = username+"@qq.com";
 		if (memberService.emailExists(email)) {
 			return Result.error("邮箱已存在");
 		}

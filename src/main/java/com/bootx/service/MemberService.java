@@ -68,4 +68,6 @@ public interface MemberService extends BaseService<Member, Long> {
 	void unLock(Member member);
 
     List<Map<String,Object>> search(String keywords, Pageable pageable);
+
+	Member getCurrent(String token);
 }
