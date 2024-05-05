@@ -3,10 +3,14 @@ package com.bootx.listener;
 
 import com.bootx.service.CategoryService;
 import com.bootx.service.HomeService;
+import com.bootx.service.SoftService;
 import jakarta.annotation.Resource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Listener - 初始化
@@ -23,6 +27,9 @@ public class InitListener {
 	@Resource
 	private HomeService homeService;
 
+	@Resource
+	private SoftService softService;
+
 	/**
 	 * 事件处理
 	 * 
@@ -32,7 +39,8 @@ public class InitListener {
 	@EventListener
 	public void handle(ContextRefreshedEvent contextRefreshedEvent) {
 		categoryService.clearCache(null);
-		categoryService.list();
+		List<Map<String, Object>> list = categoryService.list();
+		softService.load(list);
 		homeService.load(false);
 		System.out.println("aaaaaaaaaaaaaaaaa");
 	}

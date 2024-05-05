@@ -47,7 +47,8 @@ public class SoftController {
 
 	@PostMapping("/list")
 	public Result list(Pageable pageable,Long categoryId) {
-		return Result.success(softService.list(pageable,categoryId));
+		pageable.setPageSize(100);
+		return Result.success(softService.list(pageable,categoryId,true));
 	}
 
 	@PostMapping("/detail")
@@ -58,6 +59,7 @@ public class SoftController {
 		}
 		// 写入浏览日志
 		softViewLogService.add(member,soft);
+		softService.updateViewCount(soft.getId(),1);
 		return Result.success(softService.detail(id));
 	}
 
@@ -149,7 +151,7 @@ public class SoftController {
 		}catch (Exception e){
 			maps = softService.get(pageable,orderBy,categoryId);
 			if(!maps.isEmpty()){
-				redisService.set(cacheKey,JsonUtils.toJson(maps));
+				redisService.set(cacheKey,JsonUtils.toJson(maps),1,TimeUnit.MINUTES);
 			}
 		}
 

@@ -6,7 +6,6 @@ import com.bootx.dao.SoftDao;
 import com.bootx.entity.Category;
 import com.bootx.entity.Member;
 import com.bootx.entity.Soft;
-import com.bootx.entity.SoftImage;
 import com.bootx.pojo.SoftPOJO;
 import com.bootx.service.SoftImageService;
 import com.bootx.service.SoftService;
@@ -21,9 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author black
@@ -40,25 +39,38 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
     private CategoryDao categoryDao;
 
     @Override
-    public List<Map<String, Object>> list(Pageable pageable, Long categoryId) {
+    public List<Map<String, Object>> list(Pageable pageable, Long categoryId,Boolean cache) {
+        String cacheKey = "SoftServiceImpl:list:"+pageable.getPageSize()+"_"+pageable.getPageNumber()+"_"+categoryId;
+        if(cache==null || cache){
+            String s = redisService.get(cacheKey);
+            if(StringUtils.isNotBlank(s)){
+                try {
+                    return JsonUtils.toObject(s, new TypeReference<List<Map<String, Object>>>() {
+                    });
+                }catch (Exception ignored){
 
+                }
+            }
+        }
         StringBuffer sb = new StringBuffer();
         if(categoryId!=null && categoryId!=0){
-            sb.append("select id,name,logo,DATE_FORMAT(updateDate,'%Y-%m-%d %h:%i') updateDate,versionName,downloads from soft,soft_categories where soft_categories.softs_id=soft.id and soft_categories.categories_id="+categoryId);
+            sb.append("select id,name,logo,DATE_FORMAT(updateDate,'%Y-%m-%d %h:%i') updateDate,versionName,viewCount from soft,soft_categories where soft_categories.softs_id=soft.id and soft_categories.categories_id="+categoryId);
         }else{
-            sb.append("select id,name,logo,DATE_FORMAT(updateDate,'%Y-%m-%d %h:%i') updateDate,versionName,downloads from soft where 1=1");
+            sb.append("select id,name,logo,DATE_FORMAT(updateDate,'%Y-%m-%d %h:%i') updateDate,versionName,viewCount from soft where 1=1");
         }
         sb.append(" order by updateDate desc");
         sb.append(" limit ?,?");
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sb.toString(), (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize());
         maps.forEach(item->{
-            Long downloads = Long.valueOf(item.get("downloads")+"");
+            Long downloads = Long.valueOf(item.get("viewCount")+"");
             if(downloads>100000){
                 item.put("downloads",String.format("%.2f",downloads/10000.0)+"万次");
             }else{
                 item.put("downloads",downloads+"次");
             }
         });
+        // 2分钟缓存
+        redisService.set(cacheKey,JsonUtils.toJson(maps),2, TimeUnit.MINUTES);
         return maps;
     }
 
@@ -95,7 +107,7 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         }else{
             data.put("downloads",soft.getDownloads()+"次下载");
         }
-        redisService.set(cacheKey,JsonUtils.toJson(data));
+        redisService.set(cacheKey,JsonUtils.toJson(data),1,TimeUnit.MINUTES);
         return data;
     }
 
@@ -109,9 +121,20 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         }
     }
 
+    @Override
+    @Transactional
+    public void updateViewCount(Long id, int i) {
+        Soft soft = find(id);
+        if (soft != null) {
+            soft.setDownloads(soft.getViewCount() + i);
+            update(soft);
+        }
+    }
+
 
     @Override
     public List<Map<String, Object>> get(Pageable pageable, String orderBy, Long categoryId) {
+        pageable.setPageSize(1000);
         List<Map<String, Object>> maps = new ArrayList<>();
         String fromSql = "from soft";
         if (categoryId != null && categoryId != 0) {
@@ -193,7 +216,17 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         initCategory(soft, softPOJO);
         super.save(soft);
         //initSoftImage(soft, softPOJO);
+    }
 
+    @Override
+    public void load(List<Map<String, Object>> list) {
+        Pageable pageable = new Pageable();
+        pageable.setPageNumber(1);
+        pageable.setPageSize(1000);
+        for (Map<String, Object> map : list) {
+            List<Map<String, Object>> list1 = list(pageable, Long.valueOf(map.get("id") + ""),false);
+            redisService.set("productList"+map.get("id"),JsonUtils.toJson(list1));
+        }
     }
 
     private void init(Soft soft, SoftPOJO softPOJO) {

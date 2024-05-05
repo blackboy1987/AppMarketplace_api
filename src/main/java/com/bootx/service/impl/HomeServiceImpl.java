@@ -50,11 +50,16 @@ public class HomeServiceImpl implements HomeService {
         }
         List<Map<String, Object>> categories = categoryService.list();
         data.put("categories",categories);
-        data.put("carousel",jdbcTemplate.queryForList("select id,image,url from carousel where beginDate<=NOW() and endDate>=NOW() order by  orders asc "));
+        data.put("carousel",jdbcTemplate.queryForList("select id,image,url from carousel order by  orders asc "));
         // 通知公告
         data.put("notice",noticeService.get());
 
         redisService.set(cacheKey,JsonUtils.toJson(data),2, TimeUnit.HOURS);
         return data;
+    }
+
+    @Override
+    public Map<String, Object> data(boolean b) {
+        return Map.of();
     }
 }

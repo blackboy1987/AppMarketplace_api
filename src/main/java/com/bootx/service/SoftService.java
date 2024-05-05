@@ -15,11 +15,13 @@ import java.util.Map;
  */
 public interface SoftService extends BaseService<Soft, Long> {
 
-    List<Map<String,Object>> list(Pageable pageable, Long categoryId);
+    List<Map<String,Object>> list(Pageable pageable, Long categoryId,Boolean cache);
 
     Map<String,Object> detail(Long id);
 
     void updateDownloads(Long id, int i);
+
+    void updateViewCount(Long id, int i);
 
     List<Map<String, Object>> get(Pageable pageable, String orderBy, Long categoryId);
 
@@ -28,4 +30,6 @@ public interface SoftService extends BaseService<Soft, Long> {
     List<Map<String, Object>> search(String keywords, Pageable pageable);
 
     void create(SoftPOJO softPOJO, Member member);
+
+    void load(List<Map<String, Object>> list);
 }

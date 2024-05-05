@@ -29,4 +29,12 @@ public class HomeController extends BaseController {
         return Result.success(homeService.load(true));
     }
 
+
+
+    @PostMapping("/data")
+    public Result data(){
+        return Result.success(homeService.data(true));
+    }
+
+
 }

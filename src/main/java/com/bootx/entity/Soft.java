@@ -4,6 +4,8 @@ import com.bootx.common.BaseAttributeConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.*;
 
@@ -21,6 +23,11 @@ public class Soft extends BaseEntity<Long>{
     private String downloadUrl;
     private Long downloads;
     private String fullName;
+
+    @NotNull
+    @Min(0)
+    @Column(nullable = false)
+    private Long viewCount;
 
     @Column(columnDefinition = "longtext")
     private String introduce;
@@ -53,6 +60,14 @@ public class Soft extends BaseEntity<Long>{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    public Long getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Long viewCount) {
+        this.viewCount = viewCount;
+    }
 
     @OneToMany(mappedBy = "soft",fetch = FetchType.LAZY)
     private Set<SoftImage> softImages = new HashSet<>();

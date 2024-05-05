@@ -34,13 +34,29 @@ public class IndexController extends BaseController {
 		Map<String,Object> data = new HashMap<>();
 		data.put("username",member.getUsername());
 		data.put("id",member.getId());
-		if(StringUtils.isNotBlank(member.getAvatar())){
-			data.put("avatar",member.getAvatar());
-		}else{
-			data.put("avatar","https://bootx-tuchuang.oss-cn-hangzhou.aliyuncs.com/avatar/"+(member.getId()%50)+".png");
-		}
+		data.put("upload",0);
 
-		data.put("point",member.getPoint());
+
+		// 横幅广告
+		data.put("adType0",1);
+		// 模板信息流广告
+		data.put("adType1",2);
+		// 模板视频信息流
+		data.put("adType2",3);
+		// 全屏视频
+		data.put("adType3",4);
+		// 插屏广告
+		data.put("adType4",5);
+		// 激励视频广告
+		data.put("adType5",6);
+		// 开屏广告
+		data.put("adType6",6);
+		if(StringUtils.isNotBlank(member.getAvatar())){
+			data.put("avatar","https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png");
+		}else{
+			data.put("avatar","https://bootxyysc.oss-cn-hangzhou.aliyuncs.com/logo.png");
+		}
+		/*data.put("point",member.getPoint());
 		if(member.getMemberRank()!=null){
 			data.put("nextPoint",jdbcTemplate.queryForObject("select point from memberrank where id>? order by id asc limit 1;",Long.class,member.getMemberRank().getId()));
 		}else{
@@ -48,7 +64,7 @@ public class IndexController extends BaseController {
 		}
 		data.put("concernCount",jdbcTemplate.queryForObject("select count(id) from fan where member_id=?",Long.class,member.getId()));
 		data.put("fanCount",jdbcTemplate.queryForObject("select count(id) from fan where fan_id=?",Long.class,member.getId()));
-		data.put("rankName",member.getMemberRank().getName());
+		data.put("rankName",member.getMemberRank().getName());*/
 		return Result.success(data);
 	}
 
