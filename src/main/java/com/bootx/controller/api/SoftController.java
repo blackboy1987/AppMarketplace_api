@@ -4,6 +4,7 @@ package com.bootx.controller.api;
 import com.bootx.audit.Audit;
 import com.bootx.common.Pageable;
 import com.bootx.common.Result;
+import com.bootx.controller.BaseController;
 import com.bootx.entity.Member;
 import com.bootx.entity.Soft;
 import com.bootx.security.CurrentUser;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController("ApiSoftController")
 @RequestMapping("/api/soft")
-public class SoftController {
+public class SoftController extends BaseController {
 
 	@Resource
 	private SoftService softService;
@@ -60,7 +61,13 @@ public class SoftController {
 		// 写入浏览日志
 		softViewLogService.add(member,soft);
 		softService.updateViewCount(soft.getId(),1);
-		return Result.success(softService.detail(id));
+		Map<String, Object> detail = softService.detail(id);
+		// 判断有没有收藏
+		if(member!=null){
+			Long l = jdbcTemplate.queryForObject("select count(id) from collectlog where memberId=? and softId=?", Long.class, member.getId(), detail.get("id"));
+			detail.put("isCollect",l!=null&&l>0);
+		}
+		return Result.success(detail);
 	}
 
 

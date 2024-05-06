@@ -101,9 +101,10 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         data.put("updateDate",soft.getUpdateDate());
         data.put("introduce",soft.getIntroduce());
         data.put("memo",soft.getMemo());
+        data.put("categoryName",soft.getCategoryName());
         data.put("updatedContent",soft.getUpdatedContent());
         if(soft.getDownloads()>=10000){
-            data.put("downloads",String.format("%.2f",soft.getDownloads()/10000.0)+"万");
+            data.put("downloads",String.format("%.2f",soft.getViewCount()/10000.0)+"万");
         }else{
             data.put("downloads",soft.getDownloads()+"次下载");
         }
