@@ -213,7 +213,9 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
     }
 
     private void init(Soft soft) {
-
+        soft.setViewCount(1L);
+        soft.setUpdateDate(new Date());
+        soft.setDownloads(1L);
     }
 
     private void initCategory(Soft soft,Category category) {

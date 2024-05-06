@@ -55,6 +55,8 @@ public class Soft extends BaseEntity<Long>{
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    private Date updateDate;
+
     public Long getViewCount() {
         return viewCount;
     }
@@ -71,20 +73,6 @@ public class Soft extends BaseEntity<Long>{
 
     public void setSoftImages(Set<SoftImage> softImages) {
         this.softImages = softImages;
-    }
-
-    /**
-     * 0: 无广告
-     * 1：少量广告
-     * 2：超过广告
-     */
-    private Integer adType;
-    public Integer getAdType() {
-        return adType;
-    }
-
-    public void setAdType(Integer adType) {
-        this.adType = adType;
     }
 
 
@@ -228,9 +216,11 @@ public class Soft extends BaseEntity<Long>{
         this.downloadUrl1 = downloadUrl1;
     }
 
-    public static void init(Soft soft){
-        Random random = new Random();
-        soft.setViewCount(random.nextLong(1000));
-        soft.setStatus(0);
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

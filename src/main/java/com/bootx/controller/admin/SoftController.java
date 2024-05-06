@@ -45,6 +45,7 @@ public class SoftController extends BaseController {
         soft.setDownloadUrl(downloadUrl1);
         soft.setDownloadUrl1(downloadUrl1);
         soft.setIntroduce(content);
+        soft.setViewCount(0L);
         Category category = categoryService.find(categoryId);
         if(category==null){
             return Result.error("分类不存在");
