@@ -106,9 +106,10 @@ public class SoftController extends BaseController {
 	public Result url(Long id,@CurrentUser Member member) {
 		Map<String,Object> data = new HashMap<>();
 		Soft soft = softService.find(id);
-		data.put("name",soft.getAppName());
+		data.put("name",soft.getName());
 		//data.put("url",soft.getDownloadUrl());
-		data.put("url","https://m.shouji.com.cn/down/1800088.html");
+		data.put("url",soft.getDownloadUrl());
+		data.put("url1",soft.getDownloadUrl1());
 		//data.put("pwd",soft.getPassword());
 		if(soft.getDownloadUrl().endsWith(".apk")){
 			//data.put("type",0);

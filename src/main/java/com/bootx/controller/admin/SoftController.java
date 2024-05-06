@@ -5,8 +5,10 @@ import com.bootx.common.Page;
 import com.bootx.common.Pageable;
 import com.bootx.common.Result;
 import com.bootx.controller.BaseController;
-import com.bootx.entity.BaseEntity;
-import com.bootx.entity.Soft;
+import com.bootx.entity.*;
+import com.bootx.security.CurrentUser;
+import com.bootx.service.CategoryService;
+import com.bootx.service.MemberService;
 import com.bootx.service.SoftService;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.annotation.Resource;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +31,53 @@ public class SoftController extends BaseController {
     @Resource
     private SoftService softService;
 
+    @Resource
+    private CategoryService categoryService;
+
+    @Resource
+    private MemberService memberService;
+
     /**
      * 保存
      */
     @PostMapping("/save")
-    public Result save(Soft soft) {
-        softService.save(soft);
+    public Result save(Soft soft, String downloadUrl1, String img1, String img2, String img3, Long categoryId, String content, @CurrentUser Admin admin) {
+        soft.setDownloadUrl(downloadUrl1);
+        soft.setDownloadUrl1(downloadUrl1);
+        soft.setIntroduce(content);
+        Category category = categoryService.find(categoryId);
+        if(category==null){
+            return Result.error("分类不存在");
+        }
+        // 保存图片
+        if(StringUtils.isNotEmpty(img1)){
+            SoftImage softImage = new SoftImage();
+            softImage.setUrl(img1);
+            softImage.setSoft(soft);
+            softImage.setType(0);
+            softImage.setStatus(0);
+            soft.getSoftImages().add(softImage);
+        }
+        // 保存图片
+        if(StringUtils.isNotEmpty(img2)){
+            SoftImage softImage = new SoftImage();
+            softImage.setUrl(img2);
+            softImage.setSoft(soft);
+            softImage.setType(0);
+            softImage.setStatus(0);
+            soft.getSoftImages().add(softImage);
+        }
+        // 保存图片
+        if(StringUtils.isNotEmpty(img3)){
+            SoftImage softImage = new SoftImage();
+            softImage.setUrl(img3);
+            softImage.setSoft(soft);
+            softImage.setType(0);
+            softImage.setStatus(0);
+            soft.getSoftImages().add(softImage);
+        }
+        Member member = memberService.find(1L);
+        softService.create(soft,member,category);
         return Result.success();
     }
 

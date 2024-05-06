@@ -90,7 +90,7 @@ public class TouGaoController extends BaseController {
 
 	@PostMapping("/save")
 	public Result save(HttpServletRequest request, SoftPOJO softPOJO, @CurrentUser Member member) {
-		softService.create(softPOJO,member);
+		//softService.create(softPOJO,member,null);
 		return Result.success();
 	}
 

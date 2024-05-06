@@ -21,8 +21,11 @@ public class Soft extends BaseEntity<Long>{
 
     @JsonView({PageView.class,DownloadView.class})
     private String downloadUrl;
+
+    @JsonView({PageView.class,DownloadView.class})
+    private String downloadUrl1;
+
     private Long downloads;
-    private String fullName;
 
     @NotNull
     @Min(0)
@@ -36,27 +39,16 @@ public class Soft extends BaseEntity<Long>{
 
     @Column(columnDefinition = "longtext")
     private String memo;
-    private String minSdkVersion;
     @JsonView({PageView.class,DownloadView.class})
     private String name;
-    private String packageName;
-    private Long reviewCount;
-    private Double score;
     @JsonView({PageView.class,DownloadView.class})
     private String size;
     private Integer status;
-    private String targetSdkVersion;
-    private String updateDate;
     private String updatedContent;
     private String versionCode;
 
     @JsonView({DownloadView.class})
     private String versionName;
-    private String appName;
-
-    private String url;
-
-    private String subTitle;
 
     private String categoryName;
 
@@ -96,22 +88,6 @@ public class Soft extends BaseEntity<Long>{
     }
 
 
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     @Convert(converter = SoftAttrsConverter.class)
     private List<Map<String,String>> softAttrs = new ArrayList<>();
 
@@ -140,14 +116,6 @@ public class Soft extends BaseEntity<Long>{
         this.downloads = downloads;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     public String getIntroduce() {
         return introduce;
     }
@@ -172,44 +140,12 @@ public class Soft extends BaseEntity<Long>{
         this.memo = memo;
     }
 
-    public String getMinSdkVersion() {
-        return minSdkVersion;
-    }
-
-    public void setMinSdkVersion(String minSdkVersion) {
-        this.minSdkVersion = minSdkVersion;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public Long getReviewCount() {
-        return reviewCount;
-    }
-
-    public void setReviewCount(Long reviewCount) {
-        this.reviewCount = reviewCount;
-    }
-
-    public Double getScore() {
-        return score;
-    }
-
-    public void setScore(Double score) {
-        this.score = score;
     }
 
     public String getSize() {
@@ -226,22 +162,6 @@ public class Soft extends BaseEntity<Long>{
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public String getTargetSdkVersion() {
-        return targetSdkVersion;
-    }
-
-    public void setTargetSdkVersion(String targetSdkVersion) {
-        this.targetSdkVersion = targetSdkVersion;
-    }
-
-    public String getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
     }
 
     public String getUpdatedContent() {
@@ -266,14 +186,6 @@ public class Soft extends BaseEntity<Long>{
 
     public void setVersionName(String versionName) {
         this.versionName = versionName;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
     }
 
     public List<Map<String, String>> getSoftAttrs() {
@@ -308,10 +220,17 @@ public class Soft extends BaseEntity<Long>{
         this.categoryName = categoryName;
     }
 
+    public String getDownloadUrl1() {
+        return downloadUrl1;
+    }
+
+    public void setDownloadUrl1(String downloadUrl1) {
+        this.downloadUrl1 = downloadUrl1;
+    }
+
     public static void init(Soft soft){
         Random random = new Random();
-        soft.setDownloads(random.nextLong(1000));
+        soft.setViewCount(random.nextLong(1000));
         soft.setStatus(0);
-        soft.setScore(new Random().nextDouble(10));
     }
 }
