@@ -48,7 +48,7 @@ public class SoftController extends BaseController {
 
 	@PostMapping("/list")
 	public Result list(Pageable pageable,Long categoryId) {
-		pageable.setPageSize(100);
+		pageable.setPageSize(30);
 		return Result.success(softService.list(pageable,categoryId,true));
 	}
 
