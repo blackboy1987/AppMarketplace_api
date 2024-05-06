@@ -265,6 +265,8 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         categories.add(categoryDao.find(categoryId0));
         categories.add(categoryDao.find(categoryId1));
         soft.setCategories(categories);
+        soft.setCategoryName(categoryDao.find(categoryId1).getFullName());
+        // 写入终极分类
     }
 
     /*private void initSoftImage(Soft soft, SoftPOJO softPOJO) {

@@ -58,6 +58,8 @@ public class Soft extends BaseEntity<Long>{
 
     private String subTitle;
 
+    private String categoryName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -288,7 +290,6 @@ public class Soft extends BaseEntity<Long>{
 
     }
 
-
     public interface DownloadView extends DefaultView{}
 
     public Member getMember() {
@@ -297,6 +298,14 @@ public class Soft extends BaseEntity<Long>{
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public static void init(Soft soft){

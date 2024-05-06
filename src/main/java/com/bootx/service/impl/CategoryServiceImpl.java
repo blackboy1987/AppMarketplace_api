@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,9 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, Long> impleme
 
     @Override
     public Category create(Category category) {
+
+        setValue(category);
+
         Category current = categoryDao.find("url", category.getUrl());
         if(current==null){
             return super.save(category);
@@ -82,5 +86,26 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, Long> impleme
             item.remove("childrenCount");
         });
         return maps;
+    }
+
+    /**
+     * 设置值
+     *
+     * @param category
+     *            地区
+     */
+    private void setValue(Category category) {
+        if (category == null) {
+            return;
+        }
+        Category parent = category.getParent();
+        if (parent != null) {
+            category.setFullName(parent.getFullName() + category.getName());
+            category.setTreePath(parent.getTreePath() + parent.getId() + Category.TREE_PATH_SEPARATOR);
+        } else {
+            category.setFullName(category.getName());
+            category.setTreePath(Category.TREE_PATH_SEPARATOR);
+        }
+        category.setGrade(category.getParentIds().length);
     }
 }

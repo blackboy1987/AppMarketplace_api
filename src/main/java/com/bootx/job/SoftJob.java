@@ -31,7 +31,7 @@ public class SoftJob {
     /**
      * 分类定时器
      */
-    //@Scheduled(fixedDelay = 1000*60*60*24)
+    @Scheduled(fixedDelay = 1000*60*60*24)
     public void category(){
         List<Category> categories = ShouJiUtils.category();
         // 持久化
@@ -43,6 +43,41 @@ public class SoftJob {
             });
         });
     }
+
+    @Scheduled(fixedDelay = 1000*60*60*24)
+    public void category1(){
+        List<Category> all = categoryService.findAll();
+
+        // 持久化
+        all.forEach(root -> {
+            Category parent = root.getParent();
+            if(parent!=null){
+                root.setFullName(parent.getName()+Category.TREE_PATH_SEPARATOR+root.getName());
+                root.setGrade(parent.getGrade()+1);
+                root.setTreePath(parent.getTreePath() + parent.getId() + Category.TREE_PATH_SEPARATOR);
+                categoryService.update(root);
+            }else{
+                root.setFullName(root.getName());
+                root.setTreePath(Category.TREE_PATH_SEPARATOR);
+                categoryService.update(root);
+            }
+        });
+    }
+
+    @Scheduled(fixedDelay = 1000*60*60*24)
+    public void soft1(){
+        List<Soft> all = softService.findAll();
+
+        // 持久化
+        all.forEach(root -> {
+            List<Map<String, Object>> maps1 = jdbcTemplate.queryForList("select category.fullName from category,soft_categories where soft_categories.categories_id=category.id and softs_id=? order by grade desc limit 1;", root.getId());
+            if(maps1.size()>0){
+                root.setCategoryName(maps1.get(0).get("fullName")+"");
+                softService.update(root);
+            }
+        });
+    }
+
 
    // @Scheduled(fixedDelay = 1000*60*60*24)
     public void soft(){
