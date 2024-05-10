@@ -51,6 +51,7 @@ public class HomeServiceImpl implements HomeService {
         List<Map<String, Object>> categories = categoryService.list();
         data.put("categories",categories);
         data.put("carousel",jdbcTemplate.queryForList("select id,image,url from carousel order by  orders asc "));
+        data.put("list",jdbcTemplate.queryForList("select id,name,logo,categoryName,versionName,DATE_FORMAT(updateDate,'%Y-%m-%d %h:%i') updateDate from soft order by updateDate desc limit 30"));
         // 通知公告
         data.put("notice",noticeService.get());
 
