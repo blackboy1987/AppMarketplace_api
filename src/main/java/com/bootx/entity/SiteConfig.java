@@ -106,6 +106,51 @@ public class SiteConfig extends BaseEntity<Long>{
     @JsonView({PageView.class})
     private Integer memberAdType6Count;
 
+
+    /**
+     * 横幅广告次数
+     */
+    @JsonView({PageView.class})
+    private Integer adType0Count;
+
+    /**
+     * 模板信息流广告次数
+     */
+    @JsonView({PageView.class})
+    private Integer adType1Count;
+
+    /**
+     * 模板视频信息流次数
+     */
+    @JsonView({PageView.class})
+    private Integer adType2Count;
+
+    /**
+     * 全屏视频次数
+     */
+    @JsonView({PageView.class})
+    private Integer adType3Count;
+
+    /**
+     * 插屏广告次数
+     */
+    @JsonView({PageView.class})
+    private Integer adType4Count;
+
+    /**
+     * 激励视频广告次数
+     */
+    @JsonView({PageView.class})
+    private Integer adType5Count;
+
+    /**
+     * 开屏广告次数
+     */
+    @JsonView({PageView.class})
+    private Integer adType6Count;
+
+
+
     public String getSiteName() {
         return siteName;
     }
@@ -232,5 +277,61 @@ public class SiteConfig extends BaseEntity<Long>{
 
     public void setMemberAdType6Count(Integer memberAdType6Count) {
         this.memberAdType6Count = memberAdType6Count;
+    }
+
+    public Integer getAdType0Count() {
+        return adType0Count;
+    }
+
+    public void setAdType0Count(Integer adType0Count) {
+        this.adType0Count = adType0Count;
+    }
+
+    public Integer getAdType1Count() {
+        return adType1Count;
+    }
+
+    public void setAdType1Count(Integer adType1Count) {
+        this.adType1Count = adType1Count;
+    }
+
+    public Integer getAdType2Count() {
+        return adType2Count;
+    }
+
+    public void setAdType2Count(Integer adType2Count) {
+        this.adType2Count = adType2Count;
+    }
+
+    public Integer getAdType3Count() {
+        return adType3Count;
+    }
+
+    public void setAdType3Count(Integer adType3Count) {
+        this.adType3Count = adType3Count;
+    }
+
+    public Integer getAdType4Count() {
+        return adType4Count;
+    }
+
+    public void setAdType4Count(Integer adType4Count) {
+        this.adType4Count = adType4Count;
+    }
+
+    public Integer getAdType5Count() {
+        return adType5Count;
+    }
+
+    public void setAdType5Count(Integer adType5Count) {
+        this.adType5Count = adType5Count;
+    }
+
+    public Integer getAdType6Count() {
+        return adType6Count;
+    }
+
+    public void setAdType6Count(Integer adType6Count) {
+        this.adType6Count = adType6Count;
     }
 }

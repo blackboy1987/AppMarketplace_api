@@ -14,7 +14,7 @@ import java.util.Map;
 public class NoticeServiceImpl extends BaseServiceImpl<Notice,Long> implements NoticeService {
 
     @Override
-    public List<Map<String, Object>> get() {
-        return jdbcTemplate.queryForList("select id, title,content from notice order by id desc limit 1;");
+    public List<Map<String, Object>> get(Integer type) {
+        return jdbcTemplate.queryForList("select id, title,content from notice where type=? order by id desc limit 1;",type);
     }
 }

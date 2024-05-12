@@ -142,40 +142,19 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
         String pageQuery = "limit " + (pageable.getPageNumber() - 1) * pageable.getPageSize() + "," + pageable.getPageSize();
         if (StringUtils.equalsIgnoreCase("00", orderBy)) {
             // 下载排行
-            maps = jdbcTemplate.queryForList("select size, score,versionName, id,logo,name " + fromSql + " order by downloads desc " + pageQuery);
-            maps.forEach(item -> {
-                item.put("score", (item.get("score") + "").substring(0, 3));
-            });
-        } else if (StringUtils.equalsIgnoreCase("01", orderBy)) {
-            // 评分排行
-            maps = jdbcTemplate.queryForList("select id,score,logo,name,versionName,size " + fromSql + " order by score desc " + pageQuery);
-            maps.forEach(item -> {
-                item.put("score", (item.get("score") + "").substring(0, 3));
-            });
-        } else if (StringUtils.equalsIgnoreCase("2", orderBy)) {
+            maps = jdbcTemplate.queryForList("select size,versionName, id,logo,name " + fromSql + " order by downloads desc " + pageQuery);
+        }else if (StringUtils.equalsIgnoreCase("2", orderBy)) {
             // 随机
-            maps = jdbcTemplate.queryForList("SELECT size, id,logo,name,score FROM soft WHERE id >= ((SELECT MAX(id) FROM soft)-(SELECT MIN(id) FROM soft)) * RAND() + (SELECT MIN(id) FROM soft) LIMIT 20");
-            maps.forEach(item -> {
-                item.put("score", (item.get("score") + "").substring(0, 3));
-            });
+            maps = jdbcTemplate.queryForList("SELECT size, id,logo,name FROM soft WHERE id >= ((SELECT MAX(id) FROM soft)-(SELECT MIN(id) FROM soft)) * RAND() + (SELECT MIN(id) FROM soft) LIMIT 20");
         } else if (StringUtils.equalsIgnoreCase("3", orderBy)) {
             // 更新排行
-            maps = jdbcTemplate.queryForList("select size, id,logo,name,score,versionName,updateDate " + fromSql + " order by updateDate desc " + pageQuery);
-            maps.forEach(item -> {
-                item.put("score", (item.get("score") + "").substring(0, 3));
-            });
+            maps = jdbcTemplate.queryForList("select size, id,logo,name,versionName,updateDate " + fromSql + " order by updateDate desc " + pageQuery);
         } else if (StringUtils.equalsIgnoreCase("7", orderBy)) {
-            maps = jdbcTemplate.queryForList("select size, id,logo,name,score,versionName " + fromSql + " order by downloads desc " + pageQuery);
-            maps.forEach(item -> {
-                item.put("score", (item.get("score") + "").substring(0, 3));
-            });
+            maps = jdbcTemplate.queryForList("select size, id,logo,name,versionName " + fromSql + " order by downloads desc " + pageQuery);
         } else if (StringUtils.equalsIgnoreCase("8", orderBy)) {
             maps = jdbcTemplate.queryForList("select size, id,logo,name " + fromSql + " order by downloads desc " + pageQuery);
         } else {
-            maps = jdbcTemplate.queryForList("select size, id ,logo,name,score " + fromSql + " order by downloads desc " + pageQuery);
-            maps.forEach(item -> {
-                item.put("score", (item.get("score") + "").substring(0, 3));
-            });
+            maps = jdbcTemplate.queryForList("select size, id ,logo,name " + fromSql + " order by downloads desc " + pageQuery);
         }
         return maps;
     }
@@ -183,7 +162,7 @@ public class SoftServiceImpl extends BaseServiceImpl<Soft, Long> implements Soft
 
     @Override
     public List<Map<String, Object>> search(String keywords, Pageable pageable) {
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select versionName, id,logo,name,size,updateDate,score from soft where name like ? limit ?,?;", "%" + keywords + "%", (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize());
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select versionName, id,logo,name,size,updateDate from soft where name like ? limit ?,?;", "%" + keywords + "%", (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize());
         maps.forEach(item -> {
             item.put("memo", "万次下载");
         });

@@ -55,7 +55,7 @@ public class CategoryController extends BaseController {
     @JsonView(BaseEntity.PageView.class)
     public Result list(Long parentId,String name) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select id,name,orders,createdDate,parent_id parentId from category where 1=1");
+        sb.append("select id,name,orders `order`,createdDate,parent_id parentId from category where 1=1");
         if(StringUtils.isNotBlank(name)){
             sb.append(" and name like '%").append(name).append("%'");
         }

@@ -39,7 +39,7 @@ public class HomeServiceImpl implements HomeService {
         Map<String,Object> data = new HashMap<>();
         if(cache){
             try {
-                String s = redisService.get(cacheKey);
+                String s = redisService.get(cacheKey+"a");
                 data = JsonUtils.toObject(s, new TypeReference<Map<String, Object>>() {
                 });
                 // 通知公告
@@ -52,8 +52,10 @@ public class HomeServiceImpl implements HomeService {
         data.put("categories",categories);
         data.put("carousel",jdbcTemplate.queryForList("select id,image,url from carousel order by  orders asc "));
         data.put("list",jdbcTemplate.queryForList("select id,name,logo,categoryName,versionName,DATE_FORMAT(updateDate,'%Y-%m-%d %h:%i') updateDate from soft order by updateDate desc limit 30"));
-        // 通知公告
-        data.put("notice",noticeService.get());
+        // 弹窗通知公告
+        data.put("notice1",noticeService.get(1));
+        // 普通通知公告
+        data.put("notice0",noticeService.get(0));
 
         redisService.set(cacheKey,JsonUtils.toJson(data),2, TimeUnit.HOURS);
         return data;

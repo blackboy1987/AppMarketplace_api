@@ -3,16 +3,13 @@ package com.bootx.service.impl;
 import com.bootx.dao.CategoryDao;
 import com.bootx.entity.Category;
 import com.bootx.service.CategoryService;
-import com.bootx.util.JsonUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
-import java.awt.geom.Area;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,40 +25,35 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, Long> impleme
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+
     @Override
-    public Category create(Category category) {
-
-        setValue(category);
-
-        Category current = categoryDao.find("url", category.getUrl());
-        if(current==null){
-            return super.save(category);
-        }
-        current.setParent(category.getParent());
-        current.setName(category.getName());
-        current.setUrl(category.getUrl());
-        return super.update(current);
+    @Transactional(readOnly = true)
+    public List<Category> findRoots() {
+        return categoryDao.findRoots(null);
     }
 
     @Override
-    public List<Map<String, Object>> list() {
-        List<Map<String,Object>> list = new ArrayList<>();
-        String s = redisService.get("category:list");
-        try {
-            list = JsonUtils.toObject(s, new TypeReference<List<Map<String, Object>>>() {
-            });
-        }catch (Exception ignored){
+    @Transactional(readOnly = true)
+    public List<Category> findRoots(Integer count) {
+        return categoryDao.findRoots(count);
+    }
 
-        }
-        if(list.isEmpty()){
-            Map<String,Object> root = new HashMap<>();
-            root.put("id",0);
-            root.put("name","全部");
-            list.add(root);
-            List<Map<String,Object>> list1 = jdbcTemplate.queryForList("select id,name from category where parent_id is not null order by orders asc ;");
-            list.addAll(list1);
-            redisService.set("category:list",JsonUtils.toJson(list));
-        }
+    @Override
+    @Transactional(readOnly = true)
+    public List<Category> findParents(Category category, boolean recursive, Integer count) {
+        return categoryDao.findParents(category, recursive, count);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Category> findChildren(Category category, boolean recursive, Integer count) {
+        return categoryDao.findChildren(category, recursive, count);
+    }
+
+
+    @Override
+    public List<Map<String, Object>> list() {
+        List<Map<String,Object>> list = jdbcTemplate.queryForList("select id,name from category order by orders asc ;");
         return list;
     }
 
@@ -86,6 +78,27 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category, Long> impleme
             item.remove("childrenCount");
         });
         return maps;
+    }
+
+    @Override
+    @Transactional
+    public Category save(Category category) {
+        Assert.notNull(category, "[Assertion failed] - area is required; it must not be null");
+
+        setValue(category);
+        return super.save(category);
+    }
+
+    @Override
+    @Transactional
+    public Category update(Category category) {
+        Assert.notNull(category, "[Assertion failed] - area is required; it must not be null");
+
+        setValue(category);
+        for (Category children : categoryDao.findChildren(category, true, null)) {
+            setValue(children);
+        }
+        return super.update(category);
     }
 
     /**

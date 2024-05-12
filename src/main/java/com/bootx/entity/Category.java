@@ -23,9 +23,6 @@ public class Category extends OrderedEntity<Long> {
     @JsonView({PageView.class})
     private String name;
 
-    @Column(unique = true,nullable = false)
-    private String url;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Category parent;
 
@@ -59,14 +56,6 @@ public class Category extends OrderedEntity<Long> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public Category getParent() {

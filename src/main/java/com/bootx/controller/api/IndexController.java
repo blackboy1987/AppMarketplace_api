@@ -42,6 +42,7 @@ public class IndexController{
 		try {
 			return jdbcTemplate.queryForMap("select bannerAdId,feedAdId,fullScreenVideoAdId,interAdId,mediaId,rewardVideoAdId,splashAdId,templateAdId,videoFeedAdId from adconfig order by id desc limit 1");
 		}catch (Exception e){
+			e.printStackTrace();
 			return Collections.emptyMap();
 		}
 	}
@@ -54,7 +55,7 @@ public class IndexController{
 	@PostMapping("/setting")
 	public Map<String,Object> setting(){
 		try {
-			return jdbcTemplate.queryForMap("select name,logo from setting order by id desc limit 1");
+			return jdbcTemplate.queryForMap("select adType0, adType1, adType2, adType3, adType4, adType5, adType6, memberAdType0Count, memberAdType1Count, memberAdType2Count, memberAdType3Count, memberAdType4Count, memberAdType5Count, siteLogo, siteName, memberAdType6Count, adType0Count, adType1Count, adType2Count, adType3Count, adType4Count, adType5Count, adType6Count from siteconfig order by id desc  limit 1");
 		}catch (Exception e){
 			return Collections.emptyMap();
 		}

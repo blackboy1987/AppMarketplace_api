@@ -25,6 +25,9 @@ public class Notice extends OrderedEntity<Long>{
     @JsonView({PageView.class})
     private Date endDate;
 
+    @JsonView({PageView.class})
+    private Integer type;
+
     public String getTitle() {
         return title;
     }
@@ -55,5 +58,13 @@ public class Notice extends OrderedEntity<Long>{
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

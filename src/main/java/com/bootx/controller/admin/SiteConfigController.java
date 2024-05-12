@@ -30,27 +30,7 @@ public class SiteConfigController extends BaseController {
      */
     @PostMapping("/save")
     public Result save(SiteConfig siteConfig) {
-        if(siteConfig.getAdType0()==null){
-            siteConfig.setAdType0(false);
-        }
-        if(siteConfig.getAdType1()==null){
-            siteConfig.setAdType1(false);
-        }
-        if(siteConfig.getAdType2()==null){
-            siteConfig.setAdType2(false);
-        }
-        if(siteConfig.getAdType3()==null){
-            siteConfig.setAdType3(false);
-        }
-        if(siteConfig.getAdType4()==null){
-            siteConfig.setAdType4(false);
-        }
-        if(siteConfig.getAdType5()==null){
-            siteConfig.setAdType5(false);
-        }
-        if(siteConfig.getAdType6()==null){
-            siteConfig.setAdType6(false);
-        }
+        init(siteConfig);
         siteConfigService.save(siteConfig);
         return Result.success();
     }
@@ -60,6 +40,13 @@ public class SiteConfigController extends BaseController {
      */
     @PostMapping("/update")
     public Result update(SiteConfig siteConfig) {
+        init(siteConfig);
+
+        siteConfigService.update(siteConfig);
+        return Result.success();
+    }
+
+    private void init(SiteConfig siteConfig) {
         if(siteConfig.getAdType0()==null){
             siteConfig.setAdType0(false);
         }
@@ -81,8 +68,48 @@ public class SiteConfigController extends BaseController {
         if(siteConfig.getAdType6()==null){
             siteConfig.setAdType6(false);
         }
-        siteConfigService.update(siteConfig);
-        return Result.success();
+        if(siteConfig.getAdType0Count()==null){
+            siteConfig.setAdType0Count(0);
+        }
+        if(siteConfig.getAdType1Count()==null){
+            siteConfig.setAdType1Count(0);
+        }
+        if(siteConfig.getAdType2Count()==null){
+            siteConfig.setAdType2Count(0);
+        }
+        if(siteConfig.getAdType3Count()==null){
+            siteConfig.setAdType3Count(0);
+        }
+        if(siteConfig.getAdType4Count()==null){
+            siteConfig.setAdType4Count(0);
+        }
+        if(siteConfig.getAdType5Count()==null){
+            siteConfig.setAdType5Count(0);
+        }
+        if(siteConfig.getAdType6Count()==null){
+            siteConfig.setAdType6Count(0);
+        }
+        if(siteConfig.getMemberAdType0Count()==null){
+            siteConfig.setMemberAdType0Count(0);
+        }
+        if(siteConfig.getMemberAdType1Count()==null){
+            siteConfig.setMemberAdType1Count(0);
+        }
+        if(siteConfig.getMemberAdType2Count()==null){
+            siteConfig.setMemberAdType2Count(0);
+        }
+        if(siteConfig.getMemberAdType3Count()==null){
+            siteConfig.setMemberAdType3Count(0);
+        }
+        if(siteConfig.getMemberAdType4Count()==null){
+            siteConfig.setMemberAdType4Count(0);
+        }
+        if(siteConfig.getMemberAdType5Count()==null){
+            siteConfig.setMemberAdType5Count(0);
+        }
+        if(siteConfig.getMemberAdType6Count()==null){
+            siteConfig.setMemberAdType6Count(0);
+        }
     }
 
     /**

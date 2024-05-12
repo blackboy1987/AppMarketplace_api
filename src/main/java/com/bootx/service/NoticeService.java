@@ -9,5 +9,5 @@ import java.util.Map;
  * @author black
  */
 public interface NoticeService extends BaseService<Notice,Long> {
-    List<Map<String,Object>> get();
+    List<Map<String,Object>> get(Integer type);
 }
