@@ -69,46 +69,46 @@ public class SiteConfigController extends BaseController {
             siteConfig.setAdType6(false);
         }
         if(siteConfig.getAdType0Count()==null){
-            siteConfig.setAdType0Count(0);
+            siteConfig.setAdType0Count(0L);
         }
         if(siteConfig.getAdType1Count()==null){
-            siteConfig.setAdType1Count(0);
+            siteConfig.setAdType1Count(0L);
         }
         if(siteConfig.getAdType2Count()==null){
-            siteConfig.setAdType2Count(0);
+            siteConfig.setAdType2Count(0L);
         }
         if(siteConfig.getAdType3Count()==null){
-            siteConfig.setAdType3Count(0);
+            siteConfig.setAdType3Count(0L);
         }
         if(siteConfig.getAdType4Count()==null){
-            siteConfig.setAdType4Count(0);
+            siteConfig.setAdType4Count(0L);
         }
         if(siteConfig.getAdType5Count()==null){
-            siteConfig.setAdType5Count(0);
+            siteConfig.setAdType5Count(0L);
         }
         if(siteConfig.getAdType6Count()==null){
-            siteConfig.setAdType6Count(0);
+            siteConfig.setAdType6Count(0L);
         }
         if(siteConfig.getMemberAdType0Count()==null){
-            siteConfig.setMemberAdType0Count(0);
+            siteConfig.setMemberAdType0Count(0L);
         }
         if(siteConfig.getMemberAdType1Count()==null){
-            siteConfig.setMemberAdType1Count(0);
+            siteConfig.setMemberAdType1Count(0L);
         }
         if(siteConfig.getMemberAdType2Count()==null){
-            siteConfig.setMemberAdType2Count(0);
+            siteConfig.setMemberAdType2Count(0L);
         }
         if(siteConfig.getMemberAdType3Count()==null){
-            siteConfig.setMemberAdType3Count(0);
+            siteConfig.setMemberAdType3Count(0L);
         }
         if(siteConfig.getMemberAdType4Count()==null){
-            siteConfig.setMemberAdType4Count(0);
+            siteConfig.setMemberAdType4Count(0L);
         }
         if(siteConfig.getMemberAdType5Count()==null){
-            siteConfig.setMemberAdType5Count(0);
+            siteConfig.setMemberAdType5Count(0L);
         }
         if(siteConfig.getMemberAdType6Count()==null){
-            siteConfig.setMemberAdType6Count(0);
+            siteConfig.setMemberAdType6Count(0L);
         }
     }
 

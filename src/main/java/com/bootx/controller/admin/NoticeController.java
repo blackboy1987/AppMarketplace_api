@@ -64,7 +64,7 @@ public class NoticeController extends BaseController {
      */
     @PostMapping("/delete")
     public Result delete(Long[] ids) {
-
+        noticeService.delete(ids);
         return Result.success();
     }
 
